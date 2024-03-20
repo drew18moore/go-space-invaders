@@ -77,8 +77,19 @@ func (p *Player) Update() {
 		delta.Y *= factor
 	}
 
-	p.position.X += delta.X
-	p.position.Y += delta.Y
+	newX := p.position.X + delta.X
+	newY := p.position.Y + delta.Y
+
+	screenWidth := float64(p.game.Config.ScreenWidth)
+	screenHeight := float64(p.game.Config.ScreenHeight)
+	playerWidth := float64(p.sprite.Bounds().Dx())
+	playerHeight := float64(p.sprite.Bounds().Dy())
+
+	newX = math.Max(0, math.Min(newX, screenWidth-playerWidth))
+	newY = math.Max(0, math.Min(newY, screenHeight-playerHeight))
+
+	p.position.X = newX
+	p.position.Y = newY
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
