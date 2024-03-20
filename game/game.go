@@ -1,19 +1,34 @@
 package game
 
 import (
-	"game/player"
-
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+const (
+	ScreenWidth  = 800
+	ScreenHeight = 600
+)
+
+type Config struct {
+	ScreenWidth  int
+	ScreenHeight int
+}
+
 type Game struct {
-	player *player.Player
+	player *Player
+	Config *Config
 }
 
 func NewGame() *Game {
-	return &Game{
-		player: player.NewPlayer(),
+	g := &Game{
+		Config: &Config{
+			ScreenWidth:  ScreenWidth,
+			ScreenHeight: ScreenHeight,
+		},
 	}
+
+	g.player = NewPlayer(g)
+	return g
 }
 
 func (g *Game) Update() error {
@@ -27,5 +42,5 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return outsideWidth, outsideHeight
+	return ScreenWidth, ScreenHeight
 }
