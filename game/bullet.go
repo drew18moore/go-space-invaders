@@ -34,7 +34,6 @@ func (b *Bullet) Update() {
 }
 
 func (b *Bullet) Draw(screen *ebiten.Image) {
-	// bounds := b.sprite.Bounds()
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(b.position.X, b.position.Y)
 	screen.DrawImage(b.sprite, op)
