@@ -32,16 +32,16 @@ func (p *Player) Update() {
 	speed := float64(300 / ebiten.TPS())
 
 	var delta vector.Vector
-	if ebiten.IsKeyPressed(ebiten.KeyDown) {
+	if ebiten.IsKeyPressed(ebiten.KeyS) {
 		delta.Y = speed
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyUp) {
+	if ebiten.IsKeyPressed(ebiten.KeyW) {
 		delta.Y = -speed
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
+	if ebiten.IsKeyPressed(ebiten.KeyA) {
 		delta.X = -speed
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyRight) {
+	if ebiten.IsKeyPressed(ebiten.KeyD) {
 		delta.X = speed
 	}
 
