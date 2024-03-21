@@ -2,16 +2,18 @@ package game
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 const (
-	ScreenWidth  = 800
-	ScreenHeight = 600
+	ScreenWidth  = 1920
+	ScreenHeight = 1080
 )
 
 type Config struct {
 	ScreenWidth  int
 	ScreenHeight int
+	Fullscreen bool
 }
 
 type Game struct {
@@ -24,6 +26,7 @@ func NewGame() *Game {
 		Config: &Config{
 			ScreenWidth:  ScreenWidth,
 			ScreenHeight: ScreenHeight,
+			Fullscreen: false,
 		},
 	}
 
@@ -33,6 +36,11 @@ func NewGame() *Game {
 
 func (g *Game) Update() error {
 	g.player.Update()
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyF11) {
+		g.Config.Fullscreen = !g.Config.Fullscreen
+		ebiten.SetFullscreen(g.Config.Fullscreen)
+	}
 
 	return nil
 }
