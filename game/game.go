@@ -1,9 +1,6 @@
 package game
 
 import (
-	"game/assets"
-	"game/vector"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -20,9 +17,9 @@ type Config struct {
 }
 
 type Game struct {
-	player  *Player
-	Config  *Config
-	enemies []*Enemy
+	player         *Player
+	Config         *Config
+	enemyFormation EnemyFormation
 }
 
 func NewGame() *Game {
@@ -35,7 +32,7 @@ func NewGame() *Game {
 	}
 
 	g.player = NewPlayer(g)
-	g.enemies = SpawnEnemies(5, 10, 50, 50)
+	g.enemyFormation = NewEnemyFormation(5, 10, 50, 50)
 
 	return g
 }
@@ -48,53 +45,43 @@ func (g *Game) Update() error {
 		ebiten.SetFullscreen(g.Config.Fullscreen)
 	}
 
-	for i, e := range g.enemies {
+	for i, e := range g.enemyFormation.enemies {
 		for j, b := range g.player.bullets {
 			if e.Collider().Intersects(b.Collider()) {
-				g.enemies = append(g.enemies[:i], g.enemies[i+1:]...)
+				g.enemyFormation.enemies = append(g.enemyFormation.enemies[:i], g.enemyFormation.enemies[i+1:]...)
 				g.player.bullets = append(g.player.bullets[:j], g.player.bullets[j+1:]...)
 			}
 		}
 	}
+
+	// Move the entire formation based on the movement direction
+	for _, e := range g.enemyFormation.enemies {
+		e.position.X += float64(g.enemyFormation.movementDirection) * g.enemyFormation.movementSpeed
+	}
+
+	// Check if the formation has reached the edges of the screen
+	// and reverse the direction if necessary
+	for _, e := range g.enemyFormation.enemies {
+		if g.enemyFormation.movementDirection == 1 && e.position.X+e.Collider().Width >= float64(g.Config.ScreenWidth) {
+			g.enemyFormation.movementDirection = -1
+			break
+		} else if g.enemyFormation.movementDirection == -1 && e.position.X <= 0 {
+			g.enemyFormation.movementDirection = 1
+			break
+		}
+	}
+
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.player.Draw(screen)
 
-	for _, e := range g.enemies {
+	for _, e := range g.enemyFormation.enemies {
 		e.Draw(screen)
 	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return ScreenWidth, ScreenHeight
-}
-
-func SpawnEnemies(rows, cols int, spacingX, spacingY float64) []*Enemy {
-	enemies := make([]*Enemy, 0)
-
-	enemyWidth := float64(assets.EnemySprite.Bounds().Dx())
-	enemyHeight := float64(assets.EnemySprite.Bounds().Dy())
-
-	// Calculate total width and height of the enemy formation
-	totalWidth := float64(cols)*(enemyWidth+spacingX) - spacingX
-
-	// Calculate startX and startY to center the formation with the screen
-	startX := (ScreenWidth - totalWidth) / 2
-	startY := spacingY
-
-	for row := 0; row < rows; row++ {
-		for col := 0; col < cols; col++ {
-			x := startX + float64(col)*(spacingX+enemyWidth)
-			y := startY + float64(row)*(spacingY+enemyHeight)
-			pos := vector.Vector{
-				X: x,
-				Y: y,
-			}
-			enemy := NewEnemy(pos)
-			enemies = append(enemies, enemy)
-		}
-	}
-	return enemies
 }
