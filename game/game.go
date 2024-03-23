@@ -50,6 +50,7 @@ func (g *Game) Update() error {
 			if e.Collider().Intersects(b.Collider()) {
 				g.enemyFormation.enemies = append(g.enemyFormation.enemies[:i], g.enemyFormation.enemies[i+1:]...)
 				g.player.bullets = append(g.player.bullets[:j], g.player.bullets[j+1:]...)
+				g.enemyFormation.movementSpeed += 0.25
 			}
 		}
 	}
