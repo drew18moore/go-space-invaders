@@ -1,8 +1,6 @@
 package game
 
 import (
-	"fmt"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -46,10 +44,11 @@ func (g *Game) Update() error {
 		ebiten.SetFullscreen(g.Config.Fullscreen)
 	}
 
-	for _, e := range g.enemies {
-		for _, b := range g.player.bullets {
+	for i, e := range g.enemies {
+		for j, b := range g.player.bullets {
 			if e.Collider().Intersects(b.Collider()) {
-				fmt.Println("HIT")
+				g.enemies = append(g.enemies[:i], g.enemies[i+1:]...)
+				g.player.bullets = append(g.player.bullets[:j], g.player.bullets[j+1:]...)
 			}
 		}
 	}
