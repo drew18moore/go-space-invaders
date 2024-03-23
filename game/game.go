@@ -19,6 +19,7 @@ type Config struct {
 type Game struct {
 	player *Player
 	Config *Config
+	enemies []*Enemy
 }
 
 func NewGame() *Game {
@@ -31,6 +32,7 @@ func NewGame() *Game {
 	}
 
 	g.player = NewPlayer(g)
+	g.enemies = []*Enemy{ NewEnemy(g) }
 	return g
 }
 
@@ -47,6 +49,10 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.player.Draw(screen)
+
+	for _, e := range g.enemies {
+		e.Draw(screen)
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
