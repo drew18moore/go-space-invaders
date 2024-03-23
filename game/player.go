@@ -30,7 +30,7 @@ func NewPlayer(game *Game) *Player {
 	return &Player{
 		position: vector.Vector{
 			X: float64(game.Config.ScreenWidth)/2 - float64(bounds.Dx())/2,
-			Y: float64(game.Config.ScreenHeight)/2 - float64(bounds.Dy())/2,
+			Y: float64(game.Config.ScreenHeight) - float64(bounds.Dy())/2,
 		},
 		sprite:        assets.PlayerSprite,
 		game:          game,

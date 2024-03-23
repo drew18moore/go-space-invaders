@@ -11,19 +11,14 @@ import (
 type Enemy struct {
 	position vector.Vector
 	sprite   *ebiten.Image
-	game     *Game
 }
 
-func NewEnemy(game *Game) *Enemy {
+func NewEnemy(pos vector.Vector) *Enemy {
 	sprite := assets.EnemySprite
 
 	return &Enemy{
-		position: vector.Vector{
-			X: 0,
-			Y: 0,
-		},
+		position: pos,
 		sprite: sprite,
-		game:   game,
 	}
 }
 
@@ -32,8 +27,9 @@ func (e *Enemy) Update() {
 }
 
 func (e *Enemy) Draw(screen *ebiten.Image) {
-	// op := &ebiten.DrawImageOptions{}
-	screen.DrawImage(e.sprite, nil)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(e.position.X, e.position.Y)
+	screen.DrawImage(e.sprite, op)
 }
 
 func (p *Enemy) Collider() rect.Rect {
