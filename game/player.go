@@ -2,6 +2,7 @@ package game
 
 import (
 	"game/assets"
+	"game/rect"
 	"game/timer"
 	"game/vector"
 	"math"
@@ -104,4 +105,15 @@ func (p *Player) Draw(screen *ebiten.Image) {
 
 func (p *Player) AddBullet(b *Bullet) {
 	p.bullets = append(p.bullets, b)
+}
+
+func (p *Player) Collider() rect.Rect {
+	bounds := p.sprite.Bounds()
+
+	return rect.NewRect(
+		p.position.X,
+		p.position.Y,
+		float64(bounds.Dx()),
+		float64(bounds.Dy()),
+	)
 }

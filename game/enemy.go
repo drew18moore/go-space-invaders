@@ -2,6 +2,7 @@ package game
 
 import (
 	"game/assets"
+	"game/rect"
 	"game/vector"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -33,4 +34,15 @@ func (e *Enemy) Update() {
 func (e *Enemy) Draw(screen *ebiten.Image) {
 	// op := &ebiten.DrawImageOptions{}
 	screen.DrawImage(e.sprite, nil)
+}
+
+func (p *Enemy) Collider() rect.Rect {
+	bounds := p.sprite.Bounds()
+
+	return rect.NewRect(
+		p.position.X,
+		p.position.Y,
+		float64(bounds.Dx()),
+		float64(bounds.Dy()),
+	)
 }

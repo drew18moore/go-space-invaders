@@ -2,6 +2,7 @@ package game
 
 import (
 	"game/assets"
+	"game/rect"
 	"game/vector"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -37,4 +38,15 @@ func (b *Bullet) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(b.position.X, b.position.Y)
 	screen.DrawImage(b.sprite, op)
+}
+
+func (p *Bullet) Collider() rect.Rect {
+	bounds := p.sprite.Bounds()
+
+	return rect.NewRect(
+		p.position.X,
+		p.position.Y,
+		float64(bounds.Dx()),
+		float64(bounds.Dy()),
+	)
 }
