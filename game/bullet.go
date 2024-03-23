@@ -13,25 +13,35 @@ const (
 )
 
 type Bullet struct {
-	position vector.Vector
-	sprite *ebiten.Image
+	position  vector.Vector
+	sprite    *ebiten.Image
+	direction int8
 }
 
-func NewBullet(pos vector.Vector) *Bullet {
+func NewBullet(pos vector.Vector, direction int8) *Bullet {
 	bounds := assets.LaserSprite.Bounds()
+
+	var y float64
+	if direction == 1 {
+		y = pos.Y
+	} else if direction == -1 {
+		y = pos.Y - float64(bounds.Dy())
+	}
+
 	return &Bullet{
 		position: vector.Vector{
 			X: pos.X - (float64(bounds.Dx()) / 2),
-			Y: pos.Y - float64(bounds.Dy()),
+			Y: y,
 		},
 		sprite: assets.LaserSprite,
+		direction: direction,
 	}
 }
 
 func (b *Bullet) Update() {
 	speed := bulletSpeedPerSecond / float64(ebiten.TPS())
 
-	b.position.Y -= speed
+	b.position.Y += speed * float64(b.direction)
 }
 
 func (b *Bullet) Draw(screen *ebiten.Image) {

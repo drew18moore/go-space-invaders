@@ -3,15 +3,23 @@ package game
 import (
 	"game/assets"
 	"game/rect"
+	"game/timer"
 	"game/vector"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+)
+
+const (
+	enemyShootCooldown = time.Millisecond * 1000
 )
 
 type EnemyFormation struct {
 	enemies           []*Enemy
 	movementDirection int8 // 1 for moving right, -1 for moving left
 	movementSpeed     float64
+	shootCooldown     *timer.Timer
+	bullets           []*Bullet
 }
 
 type Enemy struct {
@@ -78,5 +86,6 @@ func NewEnemyFormation(rows, cols int, spacingX, spacingY float64) EnemyFormatio
 		enemies:           enemies,
 		movementDirection: 1,
 		movementSpeed:     1,
+		shootCooldown:     timer.NewTimer(enemyShootCooldown),
 	}
 }

@@ -68,7 +68,7 @@ func (p *Player) Update() {
 			X: p.position.X + (float64(bounds.Dx()) / 2),
 			Y: p.position.Y,
 		}
-		bullet := NewBullet(spawnPos)
+		bullet := NewBullet(spawnPos, -1)
 		p.AddBullet(bullet)
 	}
 

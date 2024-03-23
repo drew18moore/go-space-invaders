@@ -1,6 +1,10 @@
 package game
 
 import (
+	"game/vector"
+	"math/rand"
+	"time"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -40,6 +44,10 @@ func NewGame() *Game {
 func (g *Game) Update() error {
 	g.player.Update()
 
+	for _, b := range g.enemyFormation.bullets {
+		b.Update()
+	}
+
 	if inpututil.IsKeyJustPressed(ebiten.KeyF11) {
 		g.Config.Fullscreen = !g.Config.Fullscreen
 		ebiten.SetFullscreen(g.Config.Fullscreen)
@@ -72,6 +80,22 @@ func (g *Game) Update() error {
 		}
 	}
 
+	// Handle enemy shooting
+	g.enemyFormation.shootCooldown.Update()
+	if g.enemyFormation.shootCooldown.IsReady() && len(g.enemyFormation.enemies) > 0 {
+		g.enemyFormation.shootCooldown.Reset()
+		r := rand.New(rand.NewSource(time.Now().Unix()))
+		randEnemy := g.enemyFormation.enemies[r.Intn(len(g.enemyFormation.enemies))]
+		
+		bounds := randEnemy.sprite.Bounds()
+		spawnPos := vector.Vector{
+			X: randEnemy.position.X + (float64(bounds.Dx()) / 2),
+			Y: randEnemy.position.Y + (float64(bounds.Dy())),
+		}
+		bullet := NewBullet(spawnPos, 1)
+		g.enemyFormation.bullets = append(g.enemyFormation.bullets, bullet)
+	}
+
 	return nil
 }
 
@@ -80,6 +104,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	for _, e := range g.enemyFormation.enemies {
 		e.Draw(screen)
+	}
+
+	for _, b := range g.enemyFormation.bullets {
+		b.Draw(screen)
 	}
 }
 
