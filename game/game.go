@@ -53,6 +53,7 @@ func (g *Game) Update() error {
 		ebiten.SetFullscreen(g.Config.Fullscreen)
 	}
 
+	// Collision b/w player bullet and enemy
 	for i, e := range g.enemyFormation.enemies {
 		for j, b := range g.player.bullets {
 			if e.Collider().Intersects(b.Collider()) {
@@ -60,6 +61,13 @@ func (g *Game) Update() error {
 				g.player.bullets = append(g.player.bullets[:j], g.player.bullets[j+1:]...)
 				g.enemyFormation.movementSpeed += 0.25
 			}
+		}
+	}
+
+	//Collision b/w enemy bullet and enemy
+	for _, b := range g.enemyFormation.bullets {
+		if g.player.Collider().Intersects(b.Collider()) {
+			g.Reset()
 		}
 	}
 
@@ -113,4 +121,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return ScreenWidth, ScreenHeight
+}
+
+func (g *Game) Reset() {
+	g.player = NewPlayer(g)
+	g.enemyFormation = NewEnemyFormation(5, 10, 50, 50)
 }
