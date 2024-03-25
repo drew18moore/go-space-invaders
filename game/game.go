@@ -1,12 +1,16 @@
 package game
 
 import (
+	"fmt"
+	"game/assets"
 	"game/vector"
+	"image/color"
 	"math/rand"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
 const (
@@ -24,6 +28,7 @@ type Game struct {
 	player         *Player
 	Config         *Config
 	enemyFormation EnemyFormation
+	score          int
 }
 
 func NewGame() *Game {
@@ -60,11 +65,12 @@ func (g *Game) Update() error {
 				g.enemyFormation.enemies = append(g.enemyFormation.enemies[:i], g.enemyFormation.enemies[i+1:]...)
 				g.player.bullets = append(g.player.bullets[:j], g.player.bullets[j+1:]...)
 				g.enemyFormation.movementSpeed += 0.25
+				g.score++
 			}
 		}
 	}
 
-	//Collision b/w enemy bullet and enemy
+	//Collision b/w enemy bullet and player
 	for _, b := range g.enemyFormation.bullets {
 		if g.player.Collider().Intersects(b.Collider()) {
 			g.Reset()
@@ -94,7 +100,7 @@ func (g *Game) Update() error {
 		g.enemyFormation.shootCooldown.Reset()
 		r := rand.New(rand.NewSource(time.Now().Unix()))
 		randEnemy := g.enemyFormation.enemies[r.Intn(len(g.enemyFormation.enemies))]
-		
+
 		bounds := randEnemy.sprite.Bounds()
 		spawnPos := vector.Vector{
 			X: randEnemy.position.X + (float64(bounds.Dx()) / 2),
@@ -109,14 +115,16 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.player.Draw(screen)
-
+	
 	for _, e := range g.enemyFormation.enemies {
 		e.Draw(screen)
 	}
-
+	
 	for _, b := range g.enemyFormation.bullets {
 		b.Draw(screen)
 	}
+
+	text.Draw(screen, fmt.Sprintf("%06d", g.score), assets.ScoreFont, g.Config.ScreenWidth/2-100, 50, color.White)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
