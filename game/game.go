@@ -134,4 +134,5 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func (g *Game) Reset() {
 	g.player = NewPlayer(g)
 	g.enemyFormation = NewEnemyFormation(5, 10, 50, 50)
+	g.score = 0
 }
