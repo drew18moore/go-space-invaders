@@ -11,6 +11,12 @@ type SceneManager struct {
 	current Scene
 }
 
+func NewSceneManager() *SceneManager {
+	return &SceneManager{
+		current: &TitleScene{},
+	}
+}
+
 func (s *SceneManager) Update() error {
 	return nil
 }

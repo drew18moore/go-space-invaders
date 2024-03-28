@@ -3,6 +3,7 @@ package game
 import (
 	"fmt"
 	"game/assets"
+	"game/pkg/scenes"
 	"game/pkg/utils"
 	"image/color"
 	"math/rand"
@@ -25,6 +26,7 @@ type Config struct {
 }
 
 type Game struct {
+	sceneManager   *scenes.SceneManager
 	player         *Player
 	Config         *Config
 	enemyFormation EnemyFormation
@@ -42,6 +44,7 @@ func NewGame() *Game {
 
 	g.player = NewPlayer(g)
 	g.enemyFormation = NewEnemyFormation(5, 10, 50, 50)
+	g.sceneManager = scenes.NewSceneManager()
 
 	return g
 }
@@ -115,11 +118,11 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.player.Draw(screen)
-	
+
 	for _, e := range g.enemyFormation.enemies {
 		e.Draw(screen)
 	}
-	
+
 	for _, b := range g.enemyFormation.bullets {
 		b.Draw(screen)
 	}
