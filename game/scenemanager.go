@@ -18,3 +18,7 @@ func (s *SceneManager) Update() error {
 func (s *SceneManager) Draw() {
 
 }
+
+func (s *SceneManager) GoTo(scene Scene) {
+	s.current = scene
+}
