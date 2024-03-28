@@ -2,9 +2,7 @@ package game
 
 import (
 	"game/assets"
-	"game/rect"
-	"game/timer"
-	"game/vector"
+	"game/pkg/utils"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -18,16 +16,16 @@ type EnemyFormation struct {
 	enemies           []*Enemy
 	movementDirection int8 // 1 for moving right, -1 for moving left
 	movementSpeed     float64
-	shootCooldown     *timer.Timer
+	shootCooldown     *utils.Timer
 	bullets           []*Bullet
 }
 
 type Enemy struct {
-	position vector.Vector
+	position utils.Vector
 	sprite   *ebiten.Image
 }
 
-func NewEnemy(pos vector.Vector) *Enemy {
+func NewEnemy(pos utils.Vector) *Enemy {
 	sprite := assets.EnemySprite
 
 	return &Enemy{
@@ -46,10 +44,10 @@ func (e *Enemy) Draw(screen *ebiten.Image) {
 	screen.DrawImage(e.sprite, op)
 }
 
-func (p *Enemy) Collider() rect.Rect {
+func (p *Enemy) Collider() utils.Rect {
 	bounds := p.sprite.Bounds()
 
-	return rect.NewRect(
+	return utils.NewRect(
 		p.position.X,
 		p.position.Y,
 		float64(bounds.Dx()),
@@ -74,7 +72,7 @@ func NewEnemyFormation(rows, cols int, spacingX, spacingY float64) EnemyFormatio
 		for col := 0; col < cols; col++ {
 			x := startX + float64(col)*(spacingX+enemyWidth)
 			y := startY + float64(row)*(spacingY+enemyHeight)
-			pos := vector.Vector{
+			pos := utils.Vector{
 				X: x,
 				Y: y,
 			}
@@ -86,6 +84,6 @@ func NewEnemyFormation(rows, cols int, spacingX, spacingY float64) EnemyFormatio
 		enemies:           enemies,
 		movementDirection: 1,
 		movementSpeed:     1,
-		shootCooldown:     timer.NewTimer(enemyShootCooldown),
+		shootCooldown:     utils.NewTimer(enemyShootCooldown),
 	}
 }

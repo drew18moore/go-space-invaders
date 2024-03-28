@@ -3,7 +3,7 @@ package game
 import (
 	"fmt"
 	"game/assets"
-	"game/vector"
+	"game/pkg/utils"
 	"image/color"
 	"math/rand"
 	"time"
@@ -102,7 +102,7 @@ func (g *Game) Update() error {
 		randEnemy := g.enemyFormation.enemies[r.Intn(len(g.enemyFormation.enemies))]
 
 		bounds := randEnemy.sprite.Bounds()
-		spawnPos := vector.Vector{
+		spawnPos := utils.Vector{
 			X: randEnemy.position.X + (float64(bounds.Dx()) / 2),
 			Y: randEnemy.position.Y + (float64(bounds.Dy())),
 		}

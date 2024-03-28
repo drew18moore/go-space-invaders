@@ -2,9 +2,7 @@ package game
 
 import (
 	"game/assets"
-	"game/rect"
-	"game/timer"
-	"game/vector"
+	"game/pkg/utils"
 	"math"
 	"time"
 
@@ -16,10 +14,10 @@ const (
 )
 
 type Player struct {
-	position      vector.Vector
+	position      utils.Vector
 	sprite        *ebiten.Image
 	game          *Game
-	shootCooldown *timer.Timer
+	shootCooldown *utils.Timer
 	bullets       []*Bullet
 }
 
@@ -28,13 +26,13 @@ func NewPlayer(game *Game) *Player {
 	bounds := sprite.Bounds()
 
 	return &Player{
-		position: vector.Vector{
+		position: utils.Vector{
 			X: float64(game.Config.ScreenWidth)/2 - float64(bounds.Dx())/2,
 			Y: float64(game.Config.ScreenHeight) - float64(bounds.Dy())/2,
 		},
 		sprite:        assets.PlayerSprite,
 		game:          game,
-		shootCooldown: timer.NewTimer(shootCooldown),
+		shootCooldown: utils.NewTimer(shootCooldown),
 	}
 }
 
@@ -47,7 +45,7 @@ func (p *Player) Update() {
 
 	speed := float64(300 / ebiten.TPS())
 
-	var delta vector.Vector
+	var delta utils.Vector
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
 		delta.Y = speed
 	}
@@ -64,7 +62,7 @@ func (p *Player) Update() {
 		p.shootCooldown.Reset()
 
 		bounds := p.sprite.Bounds()
-		spawnPos := vector.Vector{
+		spawnPos := utils.Vector{
 			X: p.position.X + (float64(bounds.Dx()) / 2),
 			Y: p.position.Y,
 		}
@@ -107,10 +105,10 @@ func (p *Player) AddBullet(b *Bullet) {
 	p.bullets = append(p.bullets, b)
 }
 
-func (p *Player) Collider() rect.Rect {
+func (p *Player) Collider() utils.Rect {
 	bounds := p.sprite.Bounds()
 
-	return rect.NewRect(
+	return utils.NewRect(
 		p.position.X,
 		p.position.Y,
 		float64(bounds.Dx()),

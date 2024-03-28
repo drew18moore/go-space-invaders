@@ -2,8 +2,7 @@ package game
 
 import (
 	"game/assets"
-	"game/rect"
-	"game/vector"
+	"game/pkg/utils"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -13,12 +12,12 @@ const (
 )
 
 type Bullet struct {
-	position  vector.Vector
+	position  utils.Vector
 	sprite    *ebiten.Image
 	direction int8
 }
 
-func NewBullet(pos vector.Vector, direction int8) *Bullet {
+func NewBullet(pos utils.Vector, direction int8) *Bullet {
 	bounds := assets.LaserSprite.Bounds()
 
 	var y float64
@@ -29,7 +28,7 @@ func NewBullet(pos vector.Vector, direction int8) *Bullet {
 	}
 
 	return &Bullet{
-		position: vector.Vector{
+		position: utils.Vector{
 			X: pos.X - (float64(bounds.Dx()) / 2),
 			Y: y,
 		},
@@ -50,10 +49,10 @@ func (b *Bullet) Draw(screen *ebiten.Image) {
 	screen.DrawImage(b.sprite, op)
 }
 
-func (p *Bullet) Collider() rect.Rect {
+func (p *Bullet) Collider() utils.Rect {
 	bounds := p.sprite.Bounds()
 
-	return rect.NewRect(
+	return utils.NewRect(
 		p.position.X,
 		p.position.Y,
 		float64(bounds.Dx()),
