@@ -4,10 +4,7 @@ import (
 	"fmt"
 	"game/assets"
 	"game/pkg/scenes"
-	"game/pkg/utils"
 	"image/color"
-	"math/rand"
-	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -51,66 +48,11 @@ func NewGame() *Game {
 
 func (g *Game) Update() error {
 	g.player.Update()
-
-	for _, b := range g.enemyFormation.bullets {
-		b.Update()
-	}
+	g.enemyFormation.Update(g)
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyF11) {
 		g.Config.Fullscreen = !g.Config.Fullscreen
 		ebiten.SetFullscreen(g.Config.Fullscreen)
-	}
-
-	// Collision b/w player bullet and enemy
-	for i, e := range g.enemyFormation.enemies {
-		for j, b := range g.player.bullets {
-			if e.Collider().Intersects(b.Collider()) {
-				g.enemyFormation.enemies = append(g.enemyFormation.enemies[:i], g.enemyFormation.enemies[i+1:]...)
-				g.player.bullets = append(g.player.bullets[:j], g.player.bullets[j+1:]...)
-				g.enemyFormation.movementSpeed += 0.25
-				g.score++
-			}
-		}
-	}
-
-	//Collision b/w enemy bullet and player
-	for _, b := range g.enemyFormation.bullets {
-		if g.player.Collider().Intersects(b.Collider()) {
-			g.Reset()
-		}
-	}
-
-	// Move the entire formation based on the movement direction
-	for _, e := range g.enemyFormation.enemies {
-		e.position.X += float64(g.enemyFormation.movementDirection) * g.enemyFormation.movementSpeed
-	}
-
-	// Check if the formation has reached the edges of the screen
-	// and reverse the direction if necessary
-	for _, e := range g.enemyFormation.enemies {
-		if g.enemyFormation.movementDirection == 1 && e.position.X+e.Collider().Width >= float64(g.Config.ScreenWidth) {
-			g.enemyFormation.movementDirection = -1
-			break
-		} else if g.enemyFormation.movementDirection == -1 && e.position.X <= 0 {
-			g.enemyFormation.movementDirection = 1
-			break
-		}
-	}
-
-	// Handle enemy shooting
-	g.enemyFormation.shootCooldown.Update()
-	if g.enemyFormation.shootCooldown.IsReady() && len(g.enemyFormation.enemies) > 0 {
-		g.enemyFormation.shootCooldown.Reset()
-		r := rand.New(rand.NewSource(time.Now().Unix()))
-		randEnemy := g.enemyFormation.enemies[r.Intn(len(g.enemyFormation.enemies))]
-
-		bounds := randEnemy.sprite.Bounds()
-		spawnPos := utils.Vector{
-			X: randEnemy.position.X + (float64(bounds.Dx()) / 2),
-			Y: randEnemy.position.Y + (float64(bounds.Dy())),
-		}
-		bullet := NewBullet(spawnPos, 1)
-		g.enemyFormation.bullets = append(g.enemyFormation.bullets, bullet)
 	}
 
 	return nil
