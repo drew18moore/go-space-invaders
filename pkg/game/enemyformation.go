@@ -5,6 +5,8 @@ import (
 	"game/pkg/utils"
 	"math/rand"
 	"time"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 const (
@@ -110,4 +112,14 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 	}
 
 	return nil
+}
+
+func (ef *EnemyFormation) Draw(screen *ebiten.Image) {
+	for _, e := range ef.enemies {
+		e.Draw(screen)
+	}
+
+	for _, b := range ef.bullets {
+		b.Draw(screen)
+	}
 }

@@ -60,14 +60,7 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.player.Draw(screen)
-
-	for _, e := range g.enemyFormation.enemies {
-		e.Draw(screen)
-	}
-
-	for _, b := range g.enemyFormation.bullets {
-		b.Draw(screen)
-	}
+	g.enemyFormation.Draw(screen)
 
 	text.Draw(screen, fmt.Sprintf("%06d", g.score), assets.ScoreFont, g.Config.ScreenWidth/2-100, 50, color.White)
 }
