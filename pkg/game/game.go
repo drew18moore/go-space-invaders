@@ -7,7 +7,6 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
@@ -28,6 +27,7 @@ type Game struct {
 	Config         *Config
 	enemyFormation EnemyFormation
 	score          int
+	input          *Input
 }
 
 func NewGame() *Game {
@@ -49,11 +49,7 @@ func NewGame() *Game {
 func (g *Game) Update() error {
 	g.player.Update()
 	g.enemyFormation.Update(g)
-
-	if inpututil.IsKeyJustPressed(ebiten.KeyF11) {
-		g.Config.Fullscreen = !g.Config.Fullscreen
-		ebiten.SetFullscreen(g.Config.Fullscreen)
-	}
+	g.input.Update(g)
 
 	return nil
 }

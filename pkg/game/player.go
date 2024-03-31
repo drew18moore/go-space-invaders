@@ -19,6 +19,7 @@ type Player struct {
 	game          *Game
 	shootCooldown *utils.Timer
 	bullets       []*Bullet
+	movementSpeed float64
 }
 
 func NewPlayer(game *Game) *Player {
@@ -33,6 +34,7 @@ func NewPlayer(game *Game) *Player {
 		sprite:        assets.PlayerSprite,
 		game:          game,
 		shootCooldown: utils.NewTimer(shootCooldown),
+		movementSpeed: float64(300 / ebiten.TPS()),
 	}
 }
 
@@ -42,53 +44,6 @@ func (p *Player) Update() {
 	for _, b := range p.bullets {
 		b.Update()
 	}
-
-	speed := float64(300 / ebiten.TPS())
-
-	var delta utils.Vector
-	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		delta.Y = speed
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyW) {
-		delta.Y = -speed
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		delta.X = -speed
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		delta.X = speed
-	}
-	if ebiten.IsKeyPressed(ebiten.KeySpace) && p.shootCooldown.IsReady() {
-		p.shootCooldown.Reset()
-
-		bounds := p.sprite.Bounds()
-		spawnPos := utils.Vector{
-			X: p.position.X + (float64(bounds.Dx()) / 2),
-			Y: p.position.Y,
-		}
-		bullet := NewBullet(spawnPos, -1)
-		p.AddBullet(bullet)
-	}
-
-	if delta.X != 0 && delta.Y != 0 {
-		factor := speed / math.Sqrt(delta.X*delta.X+delta.Y*delta.Y)
-		delta.X *= factor
-		delta.Y *= factor
-	}
-
-	newX := p.position.X + delta.X
-	newY := p.position.Y + delta.Y
-
-	screenWidth := float64(p.game.Config.ScreenWidth)
-	screenHeight := float64(p.game.Config.ScreenHeight)
-	playerWidth := float64(p.sprite.Bounds().Dx())
-	playerHeight := float64(p.sprite.Bounds().Dy())
-
-	newX = math.Max(0, math.Min(newX, screenWidth-playerWidth))
-	newY = math.Max(0, math.Min(newY, screenHeight-playerHeight))
-
-	p.position.X = newX
-	p.position.Y = newY
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
@@ -114,4 +69,40 @@ func (p *Player) Collider() utils.Rect {
 		float64(bounds.Dx()),
 		float64(bounds.Dy()),
 	)
+}
+
+func (p *Player) TryMove(vector utils.Vector) {
+	if vector.X != 0 && vector.Y != 0 {
+		factor := p.movementSpeed / math.Sqrt(vector.X*vector.X+vector.Y*vector.Y)
+		vector.X *= factor
+		vector.Y *= factor
+	}
+
+	newX := p.position.X + vector.X
+	newY := p.position.Y + vector.Y
+
+	screenWidth := float64(p.game.Config.ScreenWidth)
+	screenHeight := float64(p.game.Config.ScreenHeight)
+	playerWidth := float64(p.sprite.Bounds().Dx())
+	playerHeight := float64(p.sprite.Bounds().Dy())
+
+	newX = math.Max(0, math.Min(newX, screenWidth-playerWidth))
+	newY = math.Max(0, math.Min(newY, screenHeight-playerHeight))
+
+	p.position.X = newX
+	p.position.Y = newY
+}
+
+func (p *Player) TryShoot() {
+	if p.shootCooldown.IsReady() {
+		p.shootCooldown.Reset()
+
+		bounds := p.sprite.Bounds()
+		spawnPos := utils.Vector{
+			X: p.position.X + (float64(bounds.Dx()) / 2),
+			Y: p.position.Y,
+		}
+		bullet := NewBullet(spawnPos, -1)
+		p.AddBullet(bullet)
+	}
 }
