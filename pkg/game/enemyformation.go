@@ -17,7 +17,7 @@ type EnemyFormation struct {
 	enemies           []*Enemy
 	movementDirection int8 // 1 for moving right, -1 for moving left
 	movementSpeed     float64
-	shootCooldown     *utils.Timer
+	shootTimer     *utils.Timer
 	bullets           []*Bullet
 }
 
@@ -50,7 +50,7 @@ func NewEnemyFormation(rows, cols int, spacingX, spacingY float64) EnemyFormatio
 		enemies:           enemies,
 		movementDirection: 1,
 		movementSpeed:     1,
-		shootCooldown:     utils.NewTimer(enemyShootCooldown),
+		shootTimer:     utils.NewTimer(enemyShootCooldown),
 	}
 }
 
@@ -84,6 +84,7 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 				gameState.player.bullets = append(gameState.player.bullets[:j], gameState.player.bullets[j+1:]...)
 				ef.movementSpeed += 0.25
 				gameState.score++
+				ef.shootTimer.DecreaseTimer(10)
 			}
 		}
 	}
@@ -96,9 +97,9 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 	}
 
 	// Handle enemy shooting
-	ef.shootCooldown.Update()
-	if ef.shootCooldown.IsReady() && len(ef.enemies) > 0 {
-		ef.shootCooldown.Reset()
+	ef.shootTimer.Update()
+	if ef.shootTimer.IsReady() && len(ef.enemies) > 0 {
+		ef.shootTimer.Reset()
 		r := rand.New(rand.NewSource(time.Now().Unix()))
 		randEnemy := ef.enemies[r.Intn(len(ef.enemies))]
 

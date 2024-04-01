@@ -31,3 +31,12 @@ func (t *Timer) IsReady() bool {
 func (t *Timer) Reset() {
 	t.currentTicks = 0
 }
+
+func (t *Timer) SetDuration(d time.Duration) {
+	t.targetTicks = int(d.Milliseconds()) * ebiten.TPS() / 1000
+}
+
+func (t *Timer) DecreaseTimer(d time.Duration) {
+	newDuration := time.Duration(t.targetTicks*1000/ebiten.TPS()) * time.Millisecond - d
+	t.SetDuration(newDuration)
+}
