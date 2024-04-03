@@ -1,12 +1,7 @@
 package game
 
 import (
-	"fmt"
-	"game/assets"
-	"image/color"
-
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
 const (
@@ -40,24 +35,19 @@ func NewGame() *Game {
 
 	g.player = NewPlayer(g)
 	g.enemyFormation = NewEnemyFormation(5, 10, 50, 50)
-	g.sceneManager = NewSceneManager()
+	g.sceneManager = NewSceneManager(g)
 
 	return g
 }
 
 func (g *Game) Update() error {
-	g.player.Update()
-	g.enemyFormation.Update(g)
-	g.input.Update(g)
+	g.sceneManager.Update()
 
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.player.Draw(screen)
-	g.enemyFormation.Draw(screen)
-
-	text.Draw(screen, fmt.Sprintf("%06d", g.score), assets.ScoreFont, g.Config.ScreenWidth/2-100, 50, color.White)
+	g.sceneManager.Draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -65,6 +55,9 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func (g *Game) Reset() {
+	g.sceneManager.GoTo(&TitleScene{
+		gameState: g,
+	})
 	g.player = NewPlayer(g)
 	g.enemyFormation = NewEnemyFormation(5, 10, 50, 50)
 	g.score = 0

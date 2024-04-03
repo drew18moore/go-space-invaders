@@ -7,7 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-type Input struct {}
+type Input struct{}
 
 func (i *Input) Update(gameState *Game) error {
 	// Fullscreen Keybind
@@ -30,7 +30,7 @@ func (i *Input) Update(gameState *Game) error {
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
 		delta.X = gameState.player.movementSpeed
 	}
-	if ebiten.IsKeyPressed(ebiten.KeySpace)  {
+	if ebiten.IsKeyPressed(ebiten.KeySpace) {
 		gameState.player.TryShoot()
 	}
 

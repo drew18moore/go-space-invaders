@@ -11,18 +11,22 @@ type SceneManager struct {
 	current Scene
 }
 
-func NewSceneManager() *SceneManager {
-	return &SceneManager{
-		current: &TitleScene{},
+func NewSceneManager(g *Game) *SceneManager {
+	s := &SceneManager{}
+	s.current = &TitleScene{
+		gameState: g,
 	}
+
+	return s
 }
 
 func (s *SceneManager) Update() error {
+	s.current.Update()
 	return nil
 }
 
-func (s *SceneManager) Draw() {
-
+func (s *SceneManager) Draw(screen *ebiten.Image) {
+	s.current.Draw(screen)
 }
 
 func (s *SceneManager) GoTo(scene Scene) {
