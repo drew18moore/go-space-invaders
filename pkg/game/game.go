@@ -3,7 +3,6 @@ package game
 import (
 	"fmt"
 	"game/assets"
-	"game/pkg/scenes"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -22,7 +21,7 @@ type Config struct {
 }
 
 type Game struct {
-	sceneManager   *scenes.SceneManager
+	sceneManager   *SceneManager
 	player         *Player
 	Config         *Config
 	enemyFormation EnemyFormation
@@ -41,7 +40,7 @@ func NewGame() *Game {
 
 	g.player = NewPlayer(g)
 	g.enemyFormation = NewEnemyFormation(5, 10, 50, 50)
-	g.sceneManager = scenes.NewSceneManager()
+	g.sceneManager = NewSceneManager()
 
 	return g
 }
