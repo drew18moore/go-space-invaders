@@ -18,7 +18,7 @@ type Bullet struct {
 }
 
 func NewBullet(pos utils.Vector, direction int8) *Bullet {
-	bounds := assets.LaserSprite.Bounds()
+	bounds := assets.PlayerLaserSprite.Bounds()
 
 	var y float64
 	if direction == 1 {
@@ -32,7 +32,7 @@ func NewBullet(pos utils.Vector, direction int8) *Bullet {
 			X: pos.X - (float64(bounds.Dx()) / 2),
 			Y: y,
 		},
-		sprite: assets.LaserSprite,
+		sprite: assets.PlayerLaserSprite,
 		direction: direction,
 	}
 }

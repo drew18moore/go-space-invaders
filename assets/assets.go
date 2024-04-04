@@ -14,8 +14,8 @@ import (
 var assets embed.FS
 
 var PlayerSprite = mustLoadImage("player.png")
-var LaserSprite = mustLoadImage("laser.png")
-var EnemyLaser = mustLoadImage("laser-enemy.png")
+var PlayerLaserSprite = mustLoadImage("laser-player.png")
+var EnemyLaserSprite = mustLoadImage("laser-enemy.png")
 var EnemySprite = mustLoadImage("enemy.png")
 
 var ScoreFont = mustLoadFont("font.ttf")
