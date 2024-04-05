@@ -1,6 +1,8 @@
 package game
 
 import (
+	"game/assets"
+
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -22,6 +24,7 @@ type Game struct {
 	enemyFormation EnemyFormation
 	score          int
 	input          *Input
+	background     *ebiten.Image
 }
 
 func NewGame() *Game {
@@ -36,7 +39,8 @@ func NewGame() *Game {
 	g.player = NewPlayer(g)
 	g.enemyFormation = NewEnemyFormation(5, 10, 50, 50)
 	g.sceneManager = NewSceneManager(g)
-
+	g.background = assets.Background
+	
 	return g
 }
 
