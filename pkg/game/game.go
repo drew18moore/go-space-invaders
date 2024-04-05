@@ -62,12 +62,3 @@ func (g *Game) Reset() {
 	g.enemyFormation = NewEnemyFormation(5, 10, 50, 50)
 	g.score = 0
 }
-
-// TODOS:
-// Create SceneManager struct
-// Create structs for each scene (e.x title and game scenes)
-// Move current Draw and Update logic into game scene
-// Add SceneManager to game struct
-// When SceneManager inits, set curr scene to title screen
-// Create GoTo method
-// Add event listener to title scene for space and GoTo game scene if pressed

@@ -13,6 +13,8 @@ import (
 //go:embed *
 var assets embed.FS
 
+var Background = mustLoadImage("background.png")
+
 var PlayerSprite = mustLoadImage("player.png")
 var PlayerLaserSprite = mustLoadImage("laser-player.png")
 var EnemyLaserSprite = mustLoadImage("laser-enemy.png")
