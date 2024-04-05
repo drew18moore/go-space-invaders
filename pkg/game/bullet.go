@@ -17,7 +17,25 @@ type Bullet struct {
 	direction int8
 }
 
-func NewBullet(pos utils.Vector, direction int8) *Bullet {
+type BulletType int
+
+const (
+	PlayerBullet BulletType = iota
+	EnemyBullet
+)
+
+func NewBullet(pos utils.Vector, direction int8, bulletType BulletType) *Bullet {
+	var sprite *ebiten.Image
+
+	switch bulletType {
+	case PlayerBullet:
+		sprite = assets.PlayerLaserSprite
+	case EnemyBullet:
+		sprite = assets.EnemyLaserSprite
+	default:
+		sprite = assets.PlayerLaserSprite
+	}
+	
 	bounds := assets.PlayerLaserSprite.Bounds()
 
 	var y float64
@@ -32,7 +50,7 @@ func NewBullet(pos utils.Vector, direction int8) *Bullet {
 			X: pos.X - (float64(bounds.Dx()) / 2),
 			Y: y,
 		},
-		sprite: assets.PlayerLaserSprite,
+		sprite: sprite,
 		direction: direction,
 	}
 }

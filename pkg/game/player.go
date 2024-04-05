@@ -102,7 +102,7 @@ func (p *Player) TryShoot() {
 			X: p.position.X + (float64(bounds.Dx()) / 2),
 			Y: p.position.Y,
 		}
-		bullet := NewBullet(spawnPos, -1)
+		bullet := NewBullet(spawnPos, -1, PlayerBullet)
 		p.AddBullet(bullet)
 	}
 }
