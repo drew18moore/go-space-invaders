@@ -20,7 +20,10 @@ var PlayerLaserSprite = mustLoadImage("laser-player.png")
 var EnemyLaserSprite = mustLoadImage("laser-enemy.png")
 var EnemySprite = mustLoadImage("enemy.png")
 
+var SpeedPowerupSprite = mustLoadImage("speed-powerup.png")
+
 var ScoreFont = mustLoadFont("font.ttf")
+
 
 func mustLoadImage(name string) *ebiten.Image {
 	f, err := assets.Open(name)
