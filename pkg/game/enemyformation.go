@@ -85,6 +85,8 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 				ef.movementSpeed += 0.25
 				gameState.score++
 				ef.shootTimer.DecreaseTimer(10)
+
+				
 			}
 		}
 	}
