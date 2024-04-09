@@ -35,3 +35,14 @@ func NewPowerup(pos utils.Vector, variant Variant) *Powerup {
 		sprite: sprite,
 	}
 }
+
+func (p *Powerup) Collider() utils.Rect {
+	bounds := p.sprite.Bounds()
+
+	return utils.NewRect(
+		p.position.X,
+		p.position.Y,
+		float64(bounds.Dx()),
+		float64(bounds.Dy()),
+	)
+}
