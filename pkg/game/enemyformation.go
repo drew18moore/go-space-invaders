@@ -86,7 +86,7 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 				gameState.score++
 				ef.shootTimer.DecreaseTimer(10)
 
-				
+				gameState.powerups = append(gameState.powerups, NewPowerup(e.position, SpeedPowerup))
 			}
 		}
 	}

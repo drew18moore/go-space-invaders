@@ -19,6 +19,10 @@ func (s *GameScene) Update() error {
 	g.player.Update()
 	g.enemyFormation.Update(g)
 	g.input.Update(g)
+	
+	for _, p := range g.powerups {
+		p.Update()
+	}
 
 	return nil
 }
@@ -35,6 +39,11 @@ func (s *GameScene) Draw(screen *ebiten.Image) {
 			op.GeoM.Translate(float64(x * s.gameState.background.Bounds().Dx()), float64(y * s.gameState.background.Bounds().Dy()))
 			screen.DrawImage(s.gameState.background, op)
 		}
+	}
+
+	// Draw powerups
+	for _, p := range g.powerups {
+		p.Draw(screen)
 	}
 	
 	g.player.Draw(screen)

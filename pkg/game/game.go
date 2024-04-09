@@ -25,6 +25,7 @@ type Game struct {
 	score          int
 	input          *Input
 	background     *ebiten.Image
+	powerups       []*Powerup
 }
 
 func NewGame() *Game {
@@ -40,7 +41,7 @@ func NewGame() *Game {
 	g.enemyFormation = NewEnemyFormation(5, 10, 50, 50)
 	g.sceneManager = NewSceneManager(g)
 	g.background = assets.Background
-	
+
 	return g
 }
 
