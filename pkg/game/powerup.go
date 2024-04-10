@@ -1,8 +1,10 @@
 package game
 
 import (
+	"fmt"
 	"game/assets"
 	"game/pkg/utils"
+	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -11,6 +13,7 @@ type Variant int
 
 const (
 	powerupSpeedPerSecond = 250.0
+	powerupSpawnChance = 0.25
 )
 
 const (
@@ -39,6 +42,17 @@ func NewPowerup(pos utils.Vector, variant Variant) *Powerup {
 		sprite: sprite,
 		variant: variant,
 	}
+}
+
+func generateRandomPowerup(pos utils.Vector) (*Powerup, bool) {
+	randNum := rand.Float64()
+
+	fmt.Println(randNum)
+	if randNum < powerupSpawnChance {
+		return NewPowerup(pos, SpeedPowerup), true
+	}
+
+	return nil, false
 }
 
 func (p *Powerup) Update() error {
