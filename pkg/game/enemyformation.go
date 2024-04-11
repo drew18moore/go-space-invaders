@@ -19,6 +19,11 @@ type EnemyFormation struct {
 	movementSpeed     float64
 	shootTimer        *utils.Timer
 	bullets           []*Bullet
+	stage int
+	rows int
+	cols int
+	spacingX float64
+	spacingY float64
 }
 
 func NewEnemyFormation(rows, cols int, spacingX, spacingY float64) EnemyFormation {
@@ -51,6 +56,11 @@ func NewEnemyFormation(rows, cols int, spacingX, spacingY float64) EnemyFormatio
 		movementDirection: 1,
 		movementSpeed:     1,
 		shootTimer:        utils.NewTimer(enemyShootCooldown),
+		stage: 1,
+		rows: rows,
+		cols: cols,
+		spacingX: spacingX,
+		spacingY: spacingY,
 	}
 }
 
@@ -82,9 +92,9 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 			if e.Collider().Intersects(b.Collider()) {
 				ef.enemies = append(ef.enemies[:i], ef.enemies[i+1:]...)
 				gameState.player.bullets = append(gameState.player.bullets[:j], gameState.player.bullets[j+1:]...)
-				ef.movementSpeed += 0.25
+				ef.movementSpeed += 0.10
 				gameState.score++
-				ef.shootTimer.DecreaseTimer(time.Millisecond * 5)
+				ef.shootTimer.DecreaseTimer(time.Millisecond * 2)
 
 				_, ok := generateRandomPowerup(e.position) 
 
@@ -118,6 +128,10 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 		ef.bullets = append(ef.bullets, bullet)
 	}
 
+	if len(ef.enemies) == 0 {
+		ef.NextWave()
+	}
+
 	return nil
 }
 
@@ -129,4 +143,37 @@ func (ef *EnemyFormation) Draw(screen *ebiten.Image) {
 	for _, b := range ef.bullets {
 		b.Draw(screen)
 	}
+}
+
+func (ef *EnemyFormation) NextWave() {
+	ef.bullets = nil
+
+	ef.stage++
+	enemies := make([]*Enemy, 0)
+
+	enemyWidth := float64(assets.EnemySprite.Bounds().Dx())
+	enemyHeight := float64(assets.EnemySprite.Bounds().Dy())
+
+	// Calculate total width and height of the enemy formation
+	totalWidth := float64(ef.cols)*(enemyWidth+ef.spacingX) - ef.spacingX
+
+	// Calculate startX and startY to center the formation with the screen
+	startX := (ScreenWidth - totalWidth) / 2
+	startY := ef.spacingY
+
+	for row := 0; row < ef.rows; row++ {
+		for col := 0; col < ef.cols; col++ {
+			x := startX + float64(col)*(ef.spacingX+enemyWidth)
+			y := startY + float64(row)*(ef.spacingY+enemyHeight)
+			pos := utils.Vector{
+				X: x,
+				Y: y,
+			}
+			enemy := NewEnemy(pos)
+			enemies = append(enemies, enemy)
+		}
+	}
+	ef.enemies = enemies
+	ef.movementSpeed = 1
+	ef.shootTimer = utils.NewTimer(enemyShootCooldown)
 }
