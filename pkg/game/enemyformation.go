@@ -84,7 +84,7 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 				gameState.player.bullets = append(gameState.player.bullets[:j], gameState.player.bullets[j+1:]...)
 				ef.movementSpeed += 0.25
 				gameState.score++
-				ef.shootTimer.DecreaseTimer(10)
+				ef.shootTimer.DecreaseTimer(time.Millisecond * 5)
 
 				_, ok := generateRandomPowerup(e.position) 
 
