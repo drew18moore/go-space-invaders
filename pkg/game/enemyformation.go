@@ -114,7 +114,7 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 			X: randEnemy.position.X + (float64(bounds.Dx()) / 2),
 			Y: randEnemy.position.Y + (float64(bounds.Dy())),
 		}
-		bullet := NewBullet(spawnPos, 1, EnemyBullet)
+		bullet := NewBullet(spawnPos, 1, bulletSpeedPerSecond, EnemyBullet)
 		ef.bullets = append(ef.bullets, bullet)
 	}
 

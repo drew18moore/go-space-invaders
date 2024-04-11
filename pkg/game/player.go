@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"game/assets"
 	"game/pkg/utils"
 	"math"
@@ -17,9 +18,10 @@ type Player struct {
 	position      utils.Vector
 	sprite        *ebiten.Image
 	game          *Game
-	shootCooldown *utils.Timer
+	shootTimer    *utils.Timer
 	bullets       []*Bullet
 	movementSpeed float64
+	bulletSpeed   float64
 }
 
 func NewPlayer(game *Game) *Player {
@@ -33,16 +35,25 @@ func NewPlayer(game *Game) *Player {
 		},
 		sprite:        assets.PlayerSprite,
 		game:          game,
-		shootCooldown: utils.NewTimer(shootCooldown),
+		shootTimer:    utils.NewTimer(shootCooldown),
 		movementSpeed: float64(300 / ebiten.TPS()),
+		bulletSpeed: bulletSpeedPerSecond,
 	}
 }
 
 func (p *Player) Update() {
-	p.shootCooldown.Update()
-
+	p.shootTimer.Update()
+	fmt.Println("TARGET TICKS", p.shootTimer.CurrentTarget())
 	for _, b := range p.bullets {
 		b.Update()
+	}
+
+	for i, pu := range p.game.powerups {
+		if p.Collider().Intersects(pu.Collider()) {
+			p.game.powerups = append(p.game.powerups[:i], p.game.powerups[i+1:]...)
+			p.shootTimer.DecreaseTimer(time.Millisecond * 25)
+			p.bulletSpeed += 250.0
+		}
 	}
 }
 
@@ -94,15 +105,15 @@ func (p *Player) TryMove(vector utils.Vector) {
 }
 
 func (p *Player) TryShoot() {
-	if p.shootCooldown.IsReady() {
-		p.shootCooldown.Reset()
+	if p.shootTimer.IsReady() {
+		p.shootTimer.Reset()
 
 		bounds := p.sprite.Bounds()
 		spawnPos := utils.Vector{
 			X: p.position.X + (float64(bounds.Dx()) / 2),
 			Y: p.position.Y,
 		}
-		bullet := NewBullet(spawnPos, -1, PlayerBullet)
+		bullet := NewBullet(spawnPos, -1, p.bulletSpeed, PlayerBullet)
 		p.AddBullet(bullet)
 	}
 }

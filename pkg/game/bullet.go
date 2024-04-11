@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"game/assets"
 	"game/pkg/utils"
 
@@ -15,6 +16,7 @@ type Bullet struct {
 	position  utils.Vector
 	sprite    *ebiten.Image
 	direction int8
+	speed     float64
 }
 
 type BulletType int
@@ -24,7 +26,7 @@ const (
 	EnemyBullet
 )
 
-func NewBullet(pos utils.Vector, direction int8, bulletType BulletType) *Bullet {
+func NewBullet(pos utils.Vector, direction int8, speed float64, bulletType BulletType) *Bullet {
 	var sprite *ebiten.Image
 
 	switch bulletType {
@@ -35,7 +37,7 @@ func NewBullet(pos utils.Vector, direction int8, bulletType BulletType) *Bullet 
 	default:
 		sprite = assets.PlayerLaserSprite
 	}
-	
+
 	bounds := assets.PlayerLaserSprite.Bounds()
 
 	var y float64
@@ -50,14 +52,18 @@ func NewBullet(pos utils.Vector, direction int8, bulletType BulletType) *Bullet 
 			X: pos.X - (float64(bounds.Dx()) / 2),
 			Y: y,
 		},
-		sprite: sprite,
+		sprite:    sprite,
 		direction: direction,
+		speed: speed,
 	}
 }
 
 func (b *Bullet) Update() {
-	speed := bulletSpeedPerSecond / float64(ebiten.TPS())
+	speed := b.speed / float64(ebiten.TPS())
 
+	if b.sprite == assets.PlayerLaserSprite {
+		fmt.Println(speed)
+	}
 	b.position.Y += speed * float64(b.direction)
 }
 

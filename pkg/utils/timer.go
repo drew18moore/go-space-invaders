@@ -40,3 +40,7 @@ func (t *Timer) DecreaseTimer(d time.Duration) {
 	newDuration := time.Duration(t.targetTicks*1000/ebiten.TPS()) * time.Millisecond - d
 	t.SetDuration(newDuration)
 }
+
+func (t *Timer) CurrentTarget() int {
+	return t.targetTicks
+}

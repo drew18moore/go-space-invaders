@@ -13,7 +13,7 @@ type Variant int
 
 const (
 	powerupSpeedPerSecond = 250.0
-	powerupSpawnChance = 0.25
+	powerupSpawnChance = 0.12
 )
 
 const (
