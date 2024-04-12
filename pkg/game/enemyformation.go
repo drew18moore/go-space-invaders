@@ -96,10 +96,10 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 				gameState.score++
 				ef.shootTimer.DecreaseTimer(time.Millisecond * 2)
 
-				_, ok := generateRandomPowerup(e.position) 
+				pu, ok := generateRandomPowerup(e.position) 
 
 				if ok {
-					gameState.powerups = append(gameState.powerups, NewPowerup(e.position, SpeedPowerup))
+					gameState.powerups = append(gameState.powerups, pu)
 				}
 			}
 		}

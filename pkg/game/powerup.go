@@ -17,6 +17,7 @@ const (
 
 const (
 	SpeedPowerup Variant = iota
+	MovementPowerup
 )
 
 type Powerup struct {
@@ -31,6 +32,8 @@ func NewPowerup(pos utils.Vector, variant Variant) *Powerup {
 	switch variant {
 	case SpeedPowerup:
 		sprite = assets.SpeedPowerupSprite
+	case MovementPowerup:
+		sprite = assets.MovementPowerupSprite
 	}
 
 	return &Powerup{
@@ -44,10 +47,21 @@ func NewPowerup(pos utils.Vector, variant Variant) *Powerup {
 }
 
 func generateRandomPowerup(pos utils.Vector) (*Powerup, bool) {
-	randNum := rand.Float64()
+	randFloat := rand.Float64()
 
-	if randNum < powerupSpawnChance {
-		return NewPowerup(pos, SpeedPowerup), true
+	if randFloat < powerupSpawnChance {
+		randInt := rand.Intn(2)
+
+		var variant Variant
+		switch randInt {
+		case 0:
+			variant = SpeedPowerup
+		case 1:
+			variant = MovementPowerup
+		default:
+			panic("Invalid random number generated")
+		}
+		return NewPowerup(pos, variant), true
 	}
 
 	return nil, false
