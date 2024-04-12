@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"game/assets"
 	"game/pkg/utils"
 	"math"
@@ -63,7 +62,7 @@ func (p *Player) Update() {
 				}
 				p.bulletSpeed += 250.0
 			case MovementPowerup:
-				fmt.Println("+ MOVENENT")
+				p.movementSpeed += 0.25
 			}
 		}
 	}
