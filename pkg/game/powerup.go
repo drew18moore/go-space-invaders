@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"game/assets"
 	"game/pkg/utils"
 	"math/rand"
@@ -47,7 +46,6 @@ func NewPowerup(pos utils.Vector, variant Variant) *Powerup {
 func generateRandomPowerup(pos utils.Vector) (*Powerup, bool) {
 	randNum := rand.Float64()
 
-	fmt.Println(randNum)
 	if randNum < powerupSpawnChance {
 		return NewPowerup(pos, SpeedPowerup), true
 	}

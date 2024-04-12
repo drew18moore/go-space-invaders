@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"game/assets"
 	"game/pkg/utils"
 	"math"
@@ -43,7 +42,7 @@ func NewPlayer(game *Game) *Player {
 
 func (p *Player) Update() {
 	p.shootTimer.Update()
-	fmt.Println("TARGET TICKS", p.shootTimer.CurrentTarget())
+
 	for _, b := range p.bullets {
 		b.Update()
 	}
@@ -52,6 +51,12 @@ func (p *Player) Update() {
 		if p.Collider().Intersects(pu.Collider()) {
 			p.game.powerups = append(p.game.powerups[:i], p.game.powerups[i+1:]...)
 			p.shootTimer.DecreaseTimer(time.Millisecond * 25)
+			if p.shootTimer.CurrentTarget() < 1 {
+				p.shootTimer.SetDuration(time.Millisecond * 34)
+			}
+			if p.bulletSpeed > 4250 {
+				p.bulletSpeed = 4250
+			}
 			p.bulletSpeed += 250.0
 		}
 	}

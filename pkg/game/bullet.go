@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"game/assets"
 	"game/pkg/utils"
 
@@ -60,10 +59,6 @@ func NewBullet(pos utils.Vector, direction int8, speed float64, bulletType Bulle
 
 func (b *Bullet) Update() {
 	speed := b.speed / float64(ebiten.TPS())
-
-	if b.sprite == assets.PlayerLaserSprite {
-		fmt.Println(speed)
-	}
 	b.position.Y += speed * float64(b.direction)
 }
 
