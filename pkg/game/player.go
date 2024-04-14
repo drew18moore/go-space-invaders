@@ -21,6 +21,7 @@ type Player struct {
 	bullets       []*Bullet
 	movementSpeed float64
 	bulletSpeed   float64
+	shields       int
 }
 
 func NewPlayer(game *Game) *Player {
@@ -37,6 +38,7 @@ func NewPlayer(game *Game) *Player {
 		shootTimer:    utils.NewTimer(shootCooldown),
 		movementSpeed: float64(300 / ebiten.TPS()),
 		bulletSpeed:   bulletSpeedPerSecond,
+		shields:       3,
 	}
 }
 

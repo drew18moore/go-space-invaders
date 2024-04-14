@@ -113,9 +113,16 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 	}
 
 	//Collision b/w enemy bullet and player
-	for _, b := range ef.bullets {
-		if gameState.player.Collider().Intersects(b.Collider()) {
-			gameState.Reset()
+	for i := 0; i < len(ef.bullets); i++ {
+		bullet := ef.bullets[i]
+		if gameState.player.Collider().Intersects(bullet.Collider()) {
+			ef.bullets = append(ef.bullets[:i], ef.bullets[i+1:]...)
+			i--
+			if gameState.player.shields <= 0 {
+				gameState.Reset()
+			} else {
+				gameState.player.shields--
+			}
 		}
 	}
 
