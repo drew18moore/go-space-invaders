@@ -19,11 +19,11 @@ type EnemyFormation struct {
 	movementSpeed     float64
 	shootTimer        *utils.Timer
 	bullets           []*Bullet
-	stage int
-	rows int
-	cols int
-	spacingX float64
-	spacingY float64
+	stage             int
+	rows              int
+	cols              int
+	spacingX          float64
+	spacingY          float64
 }
 
 func NewEnemyFormation(rows, cols int, spacingX, spacingY float64) EnemyFormation {
@@ -56,11 +56,11 @@ func NewEnemyFormation(rows, cols int, spacingX, spacingY float64) EnemyFormatio
 		movementDirection: 1,
 		movementSpeed:     1,
 		shootTimer:        utils.NewTimer(enemyShootCooldown),
-		stage: 1,
-		rows: rows,
-		cols: cols,
-		spacingX: spacingX,
-		spacingY: spacingY,
+		stage:             1,
+		rows:              rows,
+		cols:              cols,
+		spacingX:          spacingX,
+		spacingY:          spacingY,
 	}
 }
 
@@ -87,20 +87,27 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 	}
 
 	// Collision b/w player bullet and enemy
-	for i, e := range ef.enemies {
-		for j, b := range gameState.player.bullets {
-			if e.Collider().Intersects(b.Collider()) {
+	for i := 0; i < len(ef.enemies); i++ {
+		enemy := ef.enemies[i]
+		for j := 0; j < len(gameState.player.bullets); j++ {
+			bullet := gameState.player.bullets[j]
+			if enemy.Collider().Intersects(bullet.Collider()) {
 				ef.enemies = append(ef.enemies[:i], ef.enemies[i+1:]...)
 				gameState.player.bullets = append(gameState.player.bullets[:j], gameState.player.bullets[j+1:]...)
+
+				i--
+				j--
+
 				ef.movementSpeed += 0.10
 				gameState.score++
 				ef.shootTimer.DecreaseTimer(time.Millisecond * 2)
 
-				pu, ok := generateRandomPowerup(e.position) 
-
+				pu, ok := generateRandomPowerup(enemy.position)
 				if ok {
 					gameState.powerups = append(gameState.powerups, pu)
 				}
+
+				break
 			}
 		}
 	}
