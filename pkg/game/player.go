@@ -61,8 +61,10 @@ func (p *Player) Update() {
 					p.bulletSpeed = 4250
 				}
 				p.bulletSpeed += 250.0
+				p.game.score++
 			case MovementPowerup:
 				p.movementSpeed += 0.25
+				p.game.score++
 			}
 		}
 	}
