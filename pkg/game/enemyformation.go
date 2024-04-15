@@ -47,7 +47,7 @@ func NewEnemyFormation(rows, cols int, spacingX, spacingY float64) EnemyFormatio
 				X: x,
 				Y: y,
 			}
-			enemy := NewEnemy(pos)
+			enemy := NewEnemy(pos, 2)
 			enemies = append(enemies, enemy)
 		}
 	}
@@ -92,22 +92,27 @@ func (ef *EnemyFormation) Update(gameState *Game) error {
 		for j := 0; j < len(gameState.player.bullets); j++ {
 			bullet := gameState.player.bullets[j]
 			if enemy.Collider().Intersects(bullet.Collider()) {
-				ef.enemies = append(ef.enemies[:i], ef.enemies[i+1:]...)
 				gameState.player.bullets = append(gameState.player.bullets[:j], gameState.player.bullets[j+1:]...)
-
-				i--
 				j--
+				enemy.currentHealth--
+				
+				if enemy.currentHealth <= 0 {
+					ef.enemies = append(ef.enemies[:i], ef.enemies[i+1:]...)
 
-				ef.movementSpeed += 0.10
-				gameState.score++
-				ef.shootTimer.DecreaseTimer(time.Millisecond * 2)
+					i--
 
-				pu, ok := generateRandomPowerup(enemy.position)
-				if ok {
-					gameState.powerups = append(gameState.powerups, pu)
+					ef.movementSpeed += 0.10
+					gameState.score++
+					ef.shootTimer.DecreaseTimer(time.Millisecond * 2)
+
+					pu, ok := generateRandomPowerup(enemy.position)
+					if ok {
+						gameState.powerups = append(gameState.powerups, pu)
+					}
+
+					enemy.currentHealth--
+					break
 				}
-
-				break
 			}
 		}
 	}
@@ -183,7 +188,7 @@ func (ef *EnemyFormation) NextWave() {
 				X: x,
 				Y: y,
 			}
-			enemy := NewEnemy(pos)
+			enemy := NewEnemy(pos, 2)
 			enemies = append(enemies, enemy)
 		}
 	}
