@@ -49,11 +49,12 @@ func (p *Player) Update() {
 		b.Update()
 	}
 
-	for i, pu := range p.game.powerups {
-		if p.Collider().Intersects(pu.Collider()) {
+	for i := 0; i < len(p.game.powerups); i++ {
+		powerup := p.game.powerups[i]
+		if p.Collider().Intersects(powerup.Collider()) {
 			p.game.powerups = append(p.game.powerups[:i], p.game.powerups[i+1:]...)
-
-			switch pu.variant {
+			i--
+			switch powerup.variant {
 			case SpeedPowerup:
 				p.shootTimer.DecreaseTimer(time.Millisecond * 25)
 				if p.shootTimer.CurrentTarget() < 1 {

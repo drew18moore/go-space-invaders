@@ -11,7 +11,7 @@ type Input struct{}
 
 func (i *Input) Update(gameState *Game) error {
 	// Fullscreen Keybind
-	if inpututil.IsKeyJustPressed(ebiten.KeyF11) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyF) {
 		gameState.Config.Fullscreen = !gameState.Config.Fullscreen
 		ebiten.SetFullscreen(gameState.Config.Fullscreen)
 	}
