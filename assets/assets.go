@@ -22,6 +22,7 @@ var EnemySprite = mustLoadImage("enemy.png")
 
 var SpeedPowerupSprite = mustLoadImage("speed-powerup.png")
 var MovementPowerupSprite = mustLoadImage("movement-powerup.png")
+var ShieldPowerupSprite = mustLoadImage("shield-powerup.png")
 
 var ScoreFont = mustLoadFont("font.ttf")
 
