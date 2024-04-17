@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"game/assets"
 	"game/pkg/utils"
 	"math"
@@ -56,6 +57,7 @@ func (p *Player) Update() {
 			i--
 			switch powerup.variant {
 			case SpeedPowerup:
+				fmt.Println("SPEED")
 				p.shootTimer.DecreaseTimer(time.Millisecond * 25)
 				if p.shootTimer.CurrentTarget() < 1 {
 					p.shootTimer.SetDuration(time.Millisecond * 34)
@@ -66,8 +68,11 @@ func (p *Player) Update() {
 				p.bulletSpeed += 250.0
 				p.game.score++
 			case MovementPowerup:
+				fmt.Println("MOVEMENT")
 				p.movementSpeed += 0.25
 				p.game.score++
+			case ShieldPowerup:
+				fmt.Println("SHIELD")
 			}
 		}
 	}
