@@ -67,6 +67,9 @@ func (p *Player) Update() {
 				p.game.score++
 			case MovementPowerup:
 				p.movementSpeed += 0.25
+				if p.movementSpeed >= 12.5 {
+					p.movementSpeed = 12.5
+				}
 				p.game.score++
 			case ShieldPowerup:
 				p.shields++
