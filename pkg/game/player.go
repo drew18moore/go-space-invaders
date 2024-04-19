@@ -73,6 +73,9 @@ func (p *Player) Update() {
 				p.game.score++
 			case ShieldPowerup:
 				p.shields++
+				if p.shields > 5 {
+					p.shields = 5
+				}
 			}
 		}
 	}
