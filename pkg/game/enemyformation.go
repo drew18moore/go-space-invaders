@@ -188,7 +188,7 @@ func (ef *EnemyFormation) NextWave() {
 				X: x,
 				Y: y,
 			}
-			enemy := NewEnemy(pos, 2)
+			enemy := NewEnemy(pos, 2+ef.stage-1)
 			enemies = append(enemies, enemy)
 		}
 	}
